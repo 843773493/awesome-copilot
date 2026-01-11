@@ -1,0 +1,86 @@
+name: Auto Sync from Upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天午夜运行
+  workflow_dispatch:      # 允许手动触发
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/github/awesome-copilot.git
+
+      - name: Fetch upstream
+        run: git fetch upstream main
+
+      - name: Check if sync is needed
+        id: check
+        run: |
+          UPSTREAM=$(git rev-parse upstream/main)
+          LOCAL=$(git rev-parse origin/main)
+          if [ "$UPSTREAM" = "$LOCAL" ]; then
+            echo "already-synced=true" >> $GITHUB_OUTPUT
+          else
+            echo "already-synced=false" >> $GITHUB_OUTPUT
+            echo "Upstream: $UPSTREAM"
+            echo "Local: $LOCAL"
+          fi
+
+      - name: Merge upstream (no conflict)
+        if: steps.check.outputs.already-synced == 'false'
+        run: |
+          git merge upstream/main -m "chore: auto-sync from upstream" || echo "merge-status=conflict" >> $GITHUB_ENV
+
+      - name: Push to main
+        if: steps.check.outputs.already-synced == 'false' && env.merge-status != 'conflict'
+        run: git push origin main
+
+      - name: Create PR (if conflict)
+        if: steps.check.outputs.already-synced == 'false' && env.merge-status == 'conflict'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: 'chore: sync from upstream (conflicts)'
+          committer: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+          author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+          title: 'chore: sync from upstream (需要手动解决冲突)'
+          body: |
+            从官方源项目 https://github.com/github/awesome-copilot 同步时发现冲突
+
+            请手动审查并合并冲突的文件。
+
+            **需要保留的文件：**
+            - `*.zh-CN.md` (中文翻译文件)
+
+            **合并策略建议：**
+            1. 对于英文文件，优先采用上游版本
+            2. 保留本地的中文翻译文件
+            3. 如有其他本地修改，手动决定是否保留
+          branch: sync/upstream-${{ github.run_id }}
+
+      - name: Report sync status
+        if: always()
+        run: |
+          if [ "${{ steps.check.outputs.already-synced }}" = "true" ]; then
+            echo "✅ 仓库已是最新状态，无需同步"
+          elif [ "${{ env.merge-status }}" = "conflict" ]; then
+            echo "⚠️ 发现冲突，已创建 PR 供手动审查"
+          else
+            echo "✅ 成功同步上游更新到 main 分支"
+          fi
