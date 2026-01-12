@@ -106,14 +106,30 @@ jobs:
             exit 1
           fi
 
+          echo "=========================================="
+          echo "Starting translation process..."
+          echo "=========================================="
+          echo "Files to translate: $files_to_translate"
+          echo ""
+
           # Convert relative paths to absolute paths with docs prefix
           abs_files=""
           for file in $files_to_translate; do
             abs_files="$abs_files docs/$file"
           done
 
+          echo "Absolute file paths:"
+          for f in $abs_files; do
+            echo "  - $f"
+          done
+          echo ""
+
           # Run translation
+          echo "Starting translation..."
+          echo "=========================================="
           python scripts/translate.py $abs_files
+          echo "=========================================="
+          echo "Translation completed!"
 
       - name: Check for changes
         id: check-changes
@@ -126,6 +142,21 @@ jobs:
             echo "Changes detected:"
             git diff --name-only
           fi
+
+      - name: Commit translated files
+        if: steps.check-changes.outputs.has-changes == 'true'
+        run: |
+          echo "Adding translated files to git..."
+          git add docs/*.zh-CN.md
+
+          echo "Displaying staged changes..."
+          git diff --cached --name-only
+
+          echo "Committing changes..."
+          git commit -m "chore: add Chinese translations for docs"
+
+          echo "Commit created successfully"
+          git log -1 --oneline
 
       - name: Create pull request
         if: steps.check-changes.outputs.has-changes == 'true'
