@@ -95,12 +95,14 @@ jobs:
       - name: Translate files
         if: steps.find-files.outputs.no-files == 'false'
         env:
-          DEFAULT_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
+          DEFAULT_API_KEY: ${{ secrets.DEFAULT_API_KEY }}
         run: |
           files_to_translate="${{ steps.find-files.outputs.files-list }}"
 
           if [ -z "$DEFAULT_API_KEY" ]; then
-            echo "Error: SILICONFLOW_API_KEY secret not configured"
+            echo "Error: DEFAULT_API_KEY secret not configured in GitHub repository"
+            echo "Please add DEFAULT_API_KEY to your repository secrets:"
+            echo "  Settings → Secrets and variables → Actions → New repository secret"
             exit 1
           fi
 
