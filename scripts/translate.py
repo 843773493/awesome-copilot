@@ -52,8 +52,6 @@ class MarkdownTranslator:
         
         # Create an httpx client with explicitly no proxies
         http_client = httpx.Client(
-            proxies={},  # Empty dict to disable all proxies
-            mounts=None,
             trust_env=False  # Don't read environment variables
         )
         
