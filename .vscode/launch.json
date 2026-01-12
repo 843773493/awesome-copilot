@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "name": "Translate AGENTS.md",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/translate.py",
+      "args": [
+        "AGENTS.md"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  ]
+}

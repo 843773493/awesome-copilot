@@ -1,0 +1,631 @@
+
+
+---
+description: '使用官方 MCP Ruby SDK gem 构建 Model Context Protocol (MCP) 服务器的最佳实践和模式。'
+applyTo: "**/*.rb, **/Gemfile, **/*.gemspec, **/Rakefile"
+---
+
+# Ruby MCP 服务器开发指南
+
+在使用官方 Ruby SDK 构建 MCP 服务器时，请遵循以下最佳实践和模式。
+
+## 安装
+
+将 MCP gem 添加到 Gemfile 中：
+
+```ruby
+gem 'mcp'
+```
+
+然后运行：
+
+```bash
+bundle install
+```
+
+## 服务器设置
+
+创建 MCP 服务器实例：
+
+```ruby
+require 'mcp'
+
+server = MCP::Server.new(
+  name: 'my_server',
+  version: '1.0.0'
+)
+```
+
+## 添加工具
+
+使用类或块定义工具：
+
+### 工具作为类
+
+```ruby
+class GreetTool < MCP::Tool
+  tool_name 'greet'
+  description '生成问候信息'
+  
+  input_schema(
+    properties: {
+      name: { type: 'string', description: '需要问候的名称' }
+    },
+    required: ['name']
+  )
+  
+  output_schema(
+    properties: {
+      message: { type: 'string' },
+      timestamp: { type: 'string', format: 'date-time' }
+    },
+    required: ['message']
+  )
+  
+  annotations(
+    read_only_hint: true,
+    idempotent_hint: true
+  )
+  
+  def self.call(name:, server_context:)
+    MCP::Tool::Response.new([{
+      type: 'text',
+      text: "Hello, #{name}! Welcome to MCP."
+    }], structured_content: {
+      message: "Hello, #{name}!",
+      timestamp: Time.now.iso8601
+    })
+  end
+end
+
+server = MCP::Server.new(
+  name: 'my_server',
+  tools: [GreetTool]
+)
+```
+
+### 使用块定义工具
+
+```ruby
+server.define_tool(
+  name: 'calculate',
+  description: '执行数学计算',
+  input_schema: {
+    properties: {
+      operation: { type: 'string', enum: ['add', 'subtract', 'multiply', 'divide'] },
+      a: { type: 'number' },
+      b: { type: 'number' }
+    },
+    required: ['operation', 'a', 'b']
+  },
+  annotations: {
+    read_only_hint: true,
+    idempotent_hint: true
+  }
+) do |args, server_context|
+  operation = args['operation']
+  a = args['a']
+  b = args['b']
+  
+  result = case operation
+  when 'add' then a + b
+  when 'subtract' then a - b
+  when 'multiply' then a * b
+  when 'divide'
+    return MCP::Tool::Response.new([{ type: 'text', text: '除以零' }], is_error: true) if b == 0
+    a / b
+  else
+    return MCP::Tool::Response.new([{ type: 'text', text: "未知操作: #{operation}" }], is_error: true)
+  end
+  
+  MCP::Tool::Response.new([{ type: 'text', text: "结果: #{result}" }])
+end
+```
+
+## 添加资源
+
+定义用于数据访问的资源：
+
+```ruby
+# 注册资源
+resource = MCP::Resource.new(
+  uri: 'resource://data/example',
+  name: 'example-data',
+  description: '示例资源数据',
+  mime_type: 'application/json'
+)
+
+server = MCP::Server.new(
+  name: 'my_server',
+  resources: [resource]
+)
+
+# 定义读取处理程序
+server.resources_read_handler do |params|
+  case params[:uri]
+  when 'resource://data/example'
+    [{
+      uri: params[:uri],
+      mimeType: 'application/json',
+      text: { message: '示例数据', timestamp: Time.now }.to_json
+    }]
+  else
+    raise "未知资源: #{params[:uri]}"
+  end
+end
+```
+
+## 添加提示
+
+定义提示模板：
+
+### 提示作为类
+
+```ruby
+class CodeReviewPrompt < MCP::Prompt
+  prompt_name 'code_review'
+  description '生成代码审查提示'
+  
+  arguments [
+    MCP::Prompt::Argument.new(
+      name: 'language',
+      description: '编程语言',
+      required: true
+    ),
+    MCP::Prompt::Argument.new(
+      name: 'focus',
+      description: '审查重点区域',
+      required: false
+    )
+  ]
+  
+  def self.template(args, server_context:)
+    language = args['language'] || 'Ruby'
+    focus = args['focus'] || 'general quality'
+    
+    MCP::Prompt::Result.new(
+      description: "针对 #{language} 的代码审查，重点为 #{focus}",
+      messages: [
+        MCP::Prompt::Message.new(
+          role: 'user',
+          content: MCP::Content::Text.new("请审查这段 #{language} 代码，重点为 #{focus}。")
+        ),
+        MCP::Prompt::Message.new(
+          role: 'assistant',
+          content: MCP::Content::Text.new("我将专注于 #{focus} 进行代码审查。请分享代码。")
+        )
+      ]
+    )
+  end
+end
+
+server = MCP::Server.new(
+  name: 'my_server',
+  prompts: [CodeReviewPrompt]
+)
+```
+
+### 使用块定义提示
+
+```ruby
+server.define_prompt(
+  name: 'analyze',
+  description: '分析一个主题',
+  arguments: [
+    MCP::Prompt::Argument.new(name: 'topic', description: '分析的主题', required: true),
+    MCP::Prompt::Argument.new(name: 'depth', description: '分析深度', required: false)
+  ]
+) do |args, server_context:|
+  topic = args['topic']
+  depth = args['depth'] || 'basic'
+  
+  MCP::Prompt::Result.new(
+    description: "对 #{topic} 进行 #{depth} 级分析",
+    messages: [
+      MCP::Prompt::Message.new(
+        role: 'user',
+        content: MCP::Content::Text.new("请分析: #{topic}")
+      ),
+      MCP::Prompt::Message.new(
+        role: 'assistant',
+        content: MCP::Content::Text.new("我将提供 #{depth} 级的 #{topic} 分析")
+      )
+    ]
+  )
+end
+```
+
+## 传输配置
+
+### 标准输入输出传输
+
+用于本地命令行应用程序：
+
+```ruby
+require 'mcp'
+
+server = MCP::Server.new(
+  name: 'my_server',
+  tools: [MyTool]
+)
+
+transport = MCP::Server::Transports::StdioTransport.new(server)
+transport.open
+```
+
+### HTTP 传输（Rails）
+
+用于 Rails 应用程序：
+
+```ruby
+class McpController < ApplicationController
+  def index
+    server = MCP::Server.new(
+      name: 'rails_server',
+      version: '1.0.0',
+      tools: [SomeTool],
+      prompts: [MyPrompt],
+      server_context: { user_id: current_user.id }
+    )
+    
+    render json: server.handle_json(request.body.read)
+  end
+end
+```
+
+### 可流式传输的 HTTP 传输
+
+用于 Server-Sent Events：
+
+```ruby
+server = MCP::Server.new(name: 'my_server')
+transport = MCP::Server::Transports::StreamableHTTPTransport.new(server)
+server.transport = transport
+
+# 当工具变更时，通知客户端
+server.define_tool(name: 'new_tool') { |**args| { result: 'ok' } }
+server.notify_tools_list_changed
+```
+
+## 服务器上下文
+
+将上下文信息传递给工具和提示：
+
+```ruby
+server = MCP::Server.new(
+  name: 'my_server',
+  tools: [AuthenticatedTool],
+  server_context: {
+    user_id: current_user.id,
+    request_id: request.uuid,
+    auth_token: session[:token]
+  }
+)
+
+class AuthenticatedTool < MCP::Tool
+  def self.call(**args, server_context:)
+    user_id = server_context[:user_id]
+    # 使用 user_id 进行授权
+    
+    MCP::Tool::Response.new([{ type: 'text', text: '已授权' }])
+  end
+end
+```
+
+## 配置
+
+### 异常报告
+
+配置异常报告：
+
+```ruby
+MCP.configure do |config|
+  config.exception_reporter = ->(exception, server_context) {
+    # 向您的错误跟踪服务报告
+    Bugsnag.notify(exception) do |report|
+      report.add_metadata(:mcp, server_context)
+    end
+  }
+end
+```
+
+### 监控
+
+监控 MCP 服务器性能：
+
+```ruby
+MCP.configure do |config|
+  config.instrumentation_callback = ->(data) {
+    # 记录监控数据
+    Rails.logger.info("MCP: #{data.inspect}")
+    
+    # 或发送到指标服务
+    StatsD.timing("mcp.#{data[:method]}.duration", data[:duration])
+    StatsD.increment("mcp.#{data[:method]}.count")
+  }
+end
+```
+
+监控数据包括：
+- `method`: 调用的协议方法（例如："tools/call"）
+- `tool_name`: 调用的工具名称
+- `prompt_name`: 调用的提示名称
+- `resource_uri`: 调用的资源 URI
+- `error`: 如果查找失败，错误代码
+- `duration`: 持续时间（秒）
+
+### 协议版本
+
+覆盖协议版本：
+
+```ruby
+configuration = MCP::Configuration.new(protocol_version: '2025-06-18')
+server = MCP::Server.new(name: 'my_server', configuration: configuration)
+```
+
+## 工具注释
+
+提供工具行为的元数据：
+
+```ruby
+class DataTool < MCP::Tool
+  annotations(
+    read_only_hint: true,      # 工具仅读取数据
+    destructive_hint: false,   # 工具不会销毁数据
+    idempotent_hint: true,     # 相同输入 = 相同输出
+    open_world_hint: false     # 工具在封闭上下文中运行
+  )
+  
+  def self.call(**args, server_context:)
+    # 实现
+  end
+end
+```
+
+## 工具输出模式
+
+定义预期的输出结构：
+
+```ruby
+class WeatherTool < MCP::Tool
+  output_schema(
+    properties: {
+      temperature: { type: 'number' },
+      condition: { type: 'string' },
+      humidity: { type: 'integer' }
+    },
+    required: ['temperature', 'condition']
+  )
+  
+  def self.call(location:, server_context:)
+    weather_data = {
+      temperature: 72.5,
+      condition: 'sunny',
+      humidity: 45
+    }
+    
+    # 验证模式
+    output_schema.validate_result(weather_data)
+    
+    MCP::Tool::Response.new(
+      [{ type: 'text', text: weather_data.to_json }],
+      structured_content: weather_data
+    )
+  end
+end
+```
+
+## 响应中的结构化内容
+
+返回带有文本的结构化数据：
+
+```ruby
+class APITool < MCP::Tool
+  def self.call(endpoint:, server_context:)
+    api_data = call_api(endpoint)
+    
+    MCP::Tool::Response.new(
+      [{ type: 'text', text: api_data.to_json }],
+      structured_content: api_data
+    )
+  end
+end
+```
+
+## 自定义方法
+
+定义自定义 JSON-RPC 方法：
+
+```ruby
+server = MCP::Server.new(name: 'my_server')
+
+# 返回结果的自定义方法
+server.define_custom_method(method_name: 'add') do |params|
+  params[:a] + params[:b]
+end
+
+# 自定义通知（返回 nil）
+server.define_custom_method(method_name: 'notify') do |params|
+  puts "通知: #{params[:message]}"
+  nil
+end
+```
+
+## 通知
+
+发送列表变更通知：
+
+```ruby
+server = MCP::Server.new(name: 'my_server')
+transport = MCP::Server::Transports::StreamableHTTPTransport.new(server)
+server.transport = transport
+
+# 当工具变更时通知
+server.define_tool(name: 'new_tool') { |**args| { result: 'ok' } }
+server.notify_tools_list_changed
+
+# 当提示变更时通知
+server.define_prompt(name: 'new_prompt') { |args, **_| MCP::Prompt::Result.new(...) }
+server.notify_prompts_list_changed
+
+# 当资源变更时通知
+server.notify_resources_list_changed
+```
+
+## 资源模板
+
+定义带有 URI 模板的动态资源：
+
+```ruby
+resource_template = MCP::ResourceTemplate.new(
+  uri_template: 'users://{user_id}/profile',
+  name: 'user-profile',
+  description: '用户资料数据',
+  mime_type: 'application/json'
+)
+
+server = MCP::Server.new(
+  name: 'my_server',
+  resource_templates: [resource_template]
+)
+```
+
+## 错误处理
+
+在工具中正确处理错误：
+
+```ruby
+class RiskyTool < MCP::Tool
+  def self.call(data:, server_context:)
+    begin
+      result = risky_operation(data)
+      MCP::Tool::Response.new([{ type: 'text', text: result }])
+    rescue ValidationError => e
+      MCP::Tool::Response.new(
+        [{ type: 'text', text: "无效输入: #{e.message}" }],
+        is_error: true
+      )
+    rescue => e
+      # 将被 exception_reporter 捕获并报告
+      raise
+    end
+  end
+end
+```
+
+## 测试
+
+为您的 MCP 服务器编写测试：
+
+```ruby
+require 'minitest/autorun'
+require 'mcp'
+
+class MyToolTest < Minitest::Test
+  def test_greet_tool
+    response = GreetTool.call(name: 'Ruby', server_context: {})
+    
+    assert_equal 1, response.content.length
+    assert_match(/Ruby/, response.content.first[:text])
+    refute response.is_error
+  end
+  
+  def test_invalid_input
+    response = CalculateTool.call(operation: 'divide', a: 10, b: 0, server_context: {})
+    
+    assert response.is_error
+  end
+end
+```
+
+## 客户端使用
+
+构建 MCP 客户端以连接服务器：
+
+```ruby
+require 'mcp'
+require 'faraday'
+
+# HTTP 传输
+http_transport = MCP::Client::HTTP.new(
+  url: 'https://api.example.com/mcp',
+  headers: { 'Authorization' => "Bearer #{token}" }
+)
+
+client = MCP::Client.new(transport: http_transport)
+
+# 列出工具
+tools = client.tools
+tools.each do |tool|
+  puts "工具: #{tool.name}"
+  puts "描述: #{tool.description}"
+end
+
+# 调用工具
+response = client.call_tool(
+  tool: tools.first,
+  arguments: { message: 'Hello, world!' }
+)
+```
+
+## 最佳实践
+
+1. **使用类定义复杂工具** - 更好的组织和可测试性
+2. **定义输入/输出模式** - 确保类型安全和验证
+3. **添加注释** - 帮助客户端理解工具行为
+4. **包含结构化内容** - 提供文本和结构化数据
+5. **使用 server_context** - 传递认证和请求上下文
+6. **配置异常报告** - 监控生产环境中的错误
+7. **实现监控** - 跟踪性能指标
+8. **发送通知** - 保持客户端对变更的更新
+9. **验证输入** - 在处理前检查参数
+10. **遵循 Ruby 习惯** - 使用 snake_case，正确的缩进
+
+## 常见模式
+
+### 认证工具
+
+```ruby
+class AuthenticatedTool < MCP::Tool
+  def self.call(**args, server_context:)
+    user_id = server_context[:user_id]
+    raise '未授权' unless user_id
+    
+    # 处理认证请求
+    MCP::Tool::Response.new([{ type: 'text', text: '成功' }])
+  end
+end
+```
+
+### 分页资源
+
+```ruby
+server.resources_read_handler do |params|
+  uri = params[:uri]
+  page = params[:page] || 1
+  
+  data = fetch_paginated_data(page)
+  
+  [{
+    uri: uri,
+    mimeType: 'application/json',
+    text: data.to_json
+  }]
+end
+```
+
+### 动态提示
+
+```ruby
+class DynamicPrompt < MCP::Prompt
+  def self.template(args, server_context:)
+    user_id = server_context[:user_id]
+    user_data = User.find(user_id)
+    
+    MCP::Prompt::Result.new(
+      description: "针对 #{user_data.name} 的个性化提示",
+      messages: generate_messages_for(user_data)
+    )
+  end
+end
+```

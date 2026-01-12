@@ -1,0 +1,19 @@
+
+
+# Power Platform MCP连接器开发
+
+用于开发具有模型上下文协议（MCP）集成的Power Platform自定义连接器的完整工具包
+
+**标签:** power-platform, mcp, copilot-studio, custom-connector, json-rpc
+
+## 此集合中的项目
+
+| 标题 | 类型 | 描述 | MCP服务器 |
+|-----|----|-----------|-----------|
+| [Power Platform MCP自定义连接器开发](../instructions/power-platform-mcp-development.instructions.md)<br />[![在VS Code中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Fpower-platform-mcp-development.instructions.md)<br />[![在VS Code Insiders中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode-insiders%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Fpower-platform-mcp-development.instructions.md) | 指南 | 开发用于Microsoft Copilot Studio的Power Platform自定义连接器的指南，包含模型上下文协议（MCP）集成 |  |
+| [Power Platform MCP连接器套件](../prompts/power-platform-mcp-connector-suite.prompt.md)<br />[![在VS Code中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fpower-platform-mcp-connector-suite.prompt.md)<br />[![在VS Code Insiders中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode-insiders%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fpower-platform-mcp-connector-suite.prompt.md) | 提示 | 生成完整的Power Platform自定义连接器（包含模式生成、故障排除和验证功能），并实现模型上下文协议（MCP）与Copilot Studio的集成 |  |
+| [Power Platform MCP连接器生成器](../prompts/mcp-copilot-studio-server-generator.prompt.md)<br />[![在VS Code中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fmcp-copilot-studio-server-generator.prompt.md)<br />[![在VS Code Insiders中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode-insiders%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fmcp-copilot-studio-server-generator.prompt.md) | 提示 | 生成一个为Copilot Studio集成优化的完整MCP服务器实现，包含适当的模式约束和可流式传输的HTTP支持 |  |
+| [Power Platform MCP集成专家](../agents/power-platform-mcp-integration-expert.agent.md)<br />[![在VS Code中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fpower-platform-mcp-integration-expert.agent.md)<br />[![在VS Code Insiders中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/agent?url=vscode-insiders%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fpower-platform-mcp-integration-expert.agent.md) | 代理 | 专精于Power Platform自定义连接器开发的MCP集成专家，具备对模式、协议和集成模式的全面知识 |  |
+
+---
+*此集合包含4个针对**Power Platform MCP连接器开发**的精选项目。*

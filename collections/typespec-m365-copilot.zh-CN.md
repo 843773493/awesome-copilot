@@ -1,0 +1,19 @@
+
+
+# TypeSpec for Microsoft 365 Copilot
+
+为使用 TypeSpec 构建声明式代理和 API 插件而提供的全面提示、指令和资源集合，用于 Microsoft 365 Copilot 扩展性开发。
+
+**标签:** typespec, m365-copilot, 声明式代理, api-插件, 代理开发, microsoft-365
+
+## 本集合中的项目
+
+| 标题 | 类型 | 描述 |
+| ----- | ---- | ----------- |
+| [创建 TypeSpec 声明式代理](../prompts/typespec-create-agent.prompt.md)<br />[![在 VS Code 中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Ftypespec-create-agent.prompt.md)<br />[![在 VS Code Insiders 中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode-insiders%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Ftypespec-create-agent.prompt.md) | 提示 | 为 Microsoft 365 Copilot 生成一个完整的 TypeSpec 声明式代理，包含指令、功能和对话启动项 |
+| [创建 TypeSpec API 插件](../prompts/typespec-create-api-plugin.prompt.md)<br />[![在 VS Code 中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Ftypespec-create-api-plugin.prompt.md)<br />[![在 VS Code Insiders 中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode-insiders%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Ftypespec-create-api-plugin.prompt.md) | 提示 | 为 Microsoft 365 Copilot 生成一个 TypeSpec API 插件，包含 REST 操作、身份验证和 Adaptive Cards |
+| [添加 TypeSpec API 操作](../prompts/typespec-api-operations.prompt.md)<br />[![在 VS Code 中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Ftypespec-api-operations.prompt.md)<br />[![在 VS Code Insiders 中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode-insiders%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Ftypespec-api-operations.prompt.md) | 提示 | 为 TypeSpec API 插件添加 GET、POST、PATCH 和 DELETE 操作，包含正确的路由、参数和 adaptive cards |
+| [TypeSpec for Microsoft 365 Copilot 开发指南](../instructions/typespec-m365-copilot.instructions.md)<br />[![在 VS Code 中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Ftypespec-m365-copilot.instructions.md)<br />[![在 VS Code Insiders 中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode-insiders%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Ftypespec-m365-copilot.instructions.md) | 指南 | 构建基于 TypeSpec 的声明式代理和 API 插件的指南和最佳实践 |
+
+---
+*此集合包含 **TypeSpec for Microsoft 365 Copilot** 的 4 个精选项目。*
