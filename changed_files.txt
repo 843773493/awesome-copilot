@@ -1,0 +1,2 @@
+skills/azure-resource-visualizer/SKILL.md
+skills/azure-resource-visualizer/assets/template-architecture.md
