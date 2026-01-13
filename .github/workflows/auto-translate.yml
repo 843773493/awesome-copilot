@@ -165,7 +165,7 @@ jobs:
             ${{ steps.check-translated.outputs.translated-files }}
 
             **Translation Details:**
-            - Source files: English markdown files in root directory
+            - Source files: English markdown files (all directories)
             - Target files: `.zh-CN.md` versions
             - Translator: SiliconFlow API (Qwen/Qwen3-8B model)
             - Temperature: 0.3 (for consistency)
@@ -180,8 +180,6 @@ jobs:
             documentation
             translation
             automated
-          token: ${{ secrets.GITHUB_TOKEN }}
-          push-to-fork: false
 
       - name: Report status
         if: always()
