@@ -1,5 +1,3 @@
-
-
 # AGENTS.md
 
 ## 项目概述
@@ -55,12 +53,14 @@ npm run skill:create -- --name <skill-name>
 所有代理文件（*.agent.md）、提示文件（*.prompt.md）和指令文件（*.instructions.md）必须包含正确的 Markdown 前置资料。代理技能是包含 `SKILL.md` 文件（含前置资料和可选捆绑资源）的文件夹：
 
 #### 代理文件 (*.agent.md)
+
 - 必须包含 `description` 字段（用单引号包裹）
 - 文件名应为全小写，单词间用短横线分隔
 - 建议包含 `tools` 字段
 - 强烈建议指定 `model` 字段
 
 #### 提示文件 (*.prompt.md)
+
 - 必须包含 `agent` 字段（值应为 `'agent'`，用单引号包裹）
 - 必须包含非空的 `description` 字段（用单引号包裹）
 - 文件名应为全小写，单词间用短横线分隔
@@ -68,11 +68,13 @@ npm run skill:create -- --name <skill-name>
 - 强烈建议指定 `model` 字段
 
 #### 指令文件 (*.instructions.md)
+
 - 必须包含 `description` 字段（用单引号包裹，且不能为空）
-- 必须包含 `applyTo` 字段，指定文件模式（例如：'**.js, **.ts'）
+- 必须包含 `applyTo` 字段，指定文件模式（例如：'**.js,**.ts'）
 - 文件名应为全小写，单词间用短横线分隔
 
 #### 代理技能 (skills/*/SKILL.md)
+
 - 每个技能是一个文件夹，包含一个 `SKILL.md` 文件
 - `SKILL.md` 必须包含 `name` 字段（全小写，用短横线分隔，与文件夹名称匹配，最大 64 个字符）
 - `SKILL.md` 必须包含 `description` 字段（用单引号包裹，长度为 10-1024 个字符）
@@ -87,12 +89,14 @@ npm run skill:create -- --name <skill-name>
 当添加新的代理、提示、指令或技能时：
 
 **对于代理、提示和指令：**
+
 1. 创建包含正确前置资料的文件
 2. 将文件添加到相应的目录
 3. 运行：`npm run build` 更新 README.md
 4. 验证生成的 README 中是否包含该资源
 
 **对于技能：**
+
 1. 运行 `npm run skill:create` 来生成新的技能文件夹
 2. 编辑生成的 SKILL.md 文件，添加您的指令
 3. 将任何捆绑资源（脚本、模板、数据）添加到技能文件夹中
@@ -115,6 +119,7 @@ bash scripts/fix-line-endings.sh
 ```
 
 提交前请确保：
+
 - 所有 Markdown 前置资料格式正确
 - 所有新文件名遵循全小写与短横线分隔的命名规范
 - 运行 `npm run build` 更新 README
@@ -124,12 +129,14 @@ bash scripts/fix-line-endings.sh
 ## 代码风格指南
 
 ### Markdown 文件
+
 - 使用包含必要字段的正确前置资料
 - 保持描述简洁且信息丰富
 - 用单引号包裹描述字段的值
 - 使用全小写文件名，单词间用短横线分隔
 
 ### JavaScript/Node.js 脚本
+
 - 位于 `eng/` 和 `scripts/` 目录中
 - 遵循 Node.js ES 模块规范（.mjs 扩展名）
 - 使用清晰、描述性的函数和变量名称
@@ -149,7 +156,8 @@ bash scripts/fix-line-endings.sh
 ### 提交前的检查清单
 
 在提交 Pull Request 前，请确保：
-- [ ] 运行 `npm install`（或 `npm ci`）安装依赖项
+
+- [X] 运行 `npm install`（或 `npm ci`）安装依赖项
 - [ ] 运行 `npm run build` 生成更新后的 README.md
 - [ ] 运行 `bash scripts/fix-line-endings.sh` 标准化行尾符
 - [ ] 验证所有新文件包含正确的前置资料
@@ -159,6 +167,7 @@ bash scripts/fix-line-endings.sh
 ### 代码审查检查清单
 
 对于提示文件 (*.prompt.md)：
+
 - [ ] 包含 Markdown 前置资料
 - [ ] 包含 `agent` 字段（值应为 `'agent'`，用单引号包裹）
 - [ ] 包含非空的 `description` 字段（用单引号包裹）
@@ -166,12 +175,14 @@ bash scripts/fix-line-endings.sh
 - [ ] 包含 `model` 字段（强烈建议）
 
 对于指令文件 (*.instructions.md)：
+
 - [ ] 包含 Markdown 前置资料
 - [ ] 包含非空的 `description` 字段（用单引号包裹）
 - [ ] 包含 `applyTo` 字段，指定文件模式
 - [ ] 文件名为全小写，单词间用短横线分隔
 
 对于代理文件 (*.agent.md)：
+
 - [ ] 包含 Markdown 前置资料
 - [ ] 包含非空的 `description` 字段（用单引号包裹）
 - [ ] 文件名为全小写，单词间用短横线分隔
@@ -179,6 +190,7 @@ bash scripts/fix-line-endings.sh
 - [ ] 考虑使用 `tools` 字段
 
 对于技能 (skills/*/)：
+
 - [ ] 文件夹包含 SKILL.md 文件
 - [ ] SKILL.md 包含 Markdown 前置资料
 - [ ] 包含 `name` 字段，与文件夹名称匹配（全小写，用短横线分隔，最大 64 个字符）
@@ -190,6 +202,7 @@ bash scripts/fix-line-endings.sh
 ## 贡献指南
 
 这是一个社区驱动的项目。欢迎贡献！请参阅：
+
 - [贡献指南](CONTRIBUTING.md)
 - [社区规范](CODE_OF_CONDUCT.md)
 - [安全政策](SECURITY.md)

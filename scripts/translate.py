@@ -190,8 +190,11 @@ class MarkdownTranslator:
             output_path = path.parent / output_filename
 
         try:
+            # Strip excess leading/trailing whitespace while preserving single newlines at the end
+            cleaned_content = translated_content.strip()
+            # Ensure file ends with a single newline
             with open(output_path, 'w', encoding='utf-8') as f:
-                f.write(translated_content)
+                f.write(cleaned_content + '\n')
         except Exception as e:
             return {"success": False, "input_file": file_path, "error": f"Failed to save file: {e}"}
 

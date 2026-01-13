@@ -1,5 +1,3 @@
-
-
 ---
 描述：'一个全面的项目架构蓝图生成器，通过分析代码库创建详细的架构文档。能够自动检测技术栈和架构模式，生成可视化图表，记录实现模式，并提供可扩展的蓝图以保持架构一致性并指导新开发。'
 代理：'代理'
@@ -8,6 +6,7 @@
 # 全面的项目架构蓝图生成器
 
 ## 配置变量
+
 ${PROJECT_TYPE="自动检测|.NET|Java|React|Angular|Python|Node.js|Flutter|其他"} <!-- 主要技术 -->
 ${ARCHITECTURE_PATTERN="自动检测|Clean Architecture|微服务|分层|MVVM|MVC|Hexagonal|事件驱动|无服务器|单体|其他"} <!-- 主要架构模式 -->
 ${DIAGRAM_TYPE="C4|UML|流程|组件|无"} <!-- 架构图类型 -->
@@ -22,6 +21,7 @@ ${FOCUS_ON_EXTENSIBILITY=true|false} <!-- 是否强调扩展点和模式 -->
 "创建一个全面的 'Project_Architecture_Blueprint.md' 文档，彻底分析代码库中的架构模式，作为维护架构一致性的权威参考。使用以下方法：
 
 ### 1. 架构检测与分析
+
 - ${PROJECT_TYPE == "自动检测" ? "通过分析以下内容识别所有技术栈和框架：
   - 项目和配置文件
   - 包依赖关系和导入语句
@@ -35,13 +35,16 @@ ${FOCUS_ON_EXTENSIBILITY=true|false} <!-- 是否强调扩展点和模式 -->
   - 组件间通信机制" : "记录 ${ARCHITECTURE_PATTERN} 架构的实现方式"}
 
 ### 2. 架构概览
+
 - 提供清晰简洁的总体架构方法说明
 - 记录架构选择中体现的指导原则
 - 识别架构边界及其强制执行方式
 - 注明任何混合架构模式或标准模式的变体
 
 ### 3. 架构可视化
+
 ${DIAGRAM_TYPE != "无" ? `创建 ${DIAGRAM_TYPE} 图表，涵盖多个抽象层次：
+
 - 高层次架构概览，展示主要子系统
 - 组件交互图表，显示关系和依赖
 - 数据流图表，说明信息在系统中的流动
@@ -51,6 +54,7 @@ ${DIAGRAM_TYPE != "无" ? `创建 ${DIAGRAM_TYPE} 图表，涵盖多个抽象层
 - 数据流和处理序列"}
 
 ### 4. 核心架构组件
+
 对于代码库中发现的每个架构组件：
 
 - **目的与职责**：
@@ -75,6 +79,7 @@ ${DIAGRAM_TYPE != "无" ? `创建 ${DIAGRAM_TYPE} 图表，涵盖多个抽象层
   - 配置和自定义方法
 
 ### 5. 架构分层与依赖关系
+
 - 映射代码库中实现的分层结构
 - 记录各层之间的依赖规则
 - 识别实现分层分离的抽象机制
@@ -82,6 +87,7 @@ ${DIAGRAM_TYPE != "无" ? `创建 ${DIAGRAM_TYPE} 图表，涵盖多个抽象层
 - 记录用于保持分层分离的依赖注入模式
 
 ### 6. 数据架构
+
 - 记录领域模型结构和组织方式
 - 映射实体关系和聚合模式
 - 识别数据访问模式（仓库、数据映射器等）
@@ -90,6 +96,7 @@ ${DIAGRAM_TYPE != "无" ? `创建 ${DIAGRAM_TYPE} 图表，涵盖多个抽象层
 - 记录数据验证模式
 
 ### 7. 横切关注点实现
+
 记录横切关注点的实现模式：
 
 - **认证与授权**：
@@ -123,6 +130,7 @@ ${DIAGRAM_TYPE != "无" ? `创建 ${DIAGRAM_TYPE} 图表，涵盖多个抽象层
   - 功能标志实现
 
 ### 8. 服务通信模式
+
 - 记录服务边界定义
 - 识别通信协议和格式
 - 映射同步与异步通信模式
@@ -131,10 +139,12 @@ ${DIAGRAM_TYPE != "无" ? `创建 ${DIAGRAM_TYPE} 图表，涵盖多个抽象层
 - 注明服务通信中的韧性模式
 
 ### 9. 技术特定架构模式
+
 ${PROJECT_TYPE == "自动检测" ? "对于每个检测到的技术栈，记录其特定的架构模式：" : `记录 ${PROJECT_TYPE} 特定的架构模式：`}
 
-${(PROJECT_TYPE == ".NET" || PROJECT_TYPE == "自动检测") ? 
+${(PROJECT_TYPE == ".NET" || PROJECT_TYPE == "自动检测") ?
 "#### .NET 架构模式（如检测到）
+
 - 主机和应用模型实现
 - 中间件管道组织
 - 框架服务集成模式
@@ -142,8 +152,9 @@ ${(PROJECT_TYPE == ".NET" || PROJECT_TYPE == "自动检测") ?
 - API 实现模式（控制器、最小 API 等）
 - 依赖注入容器配置" : ""}
 
-${(PROJECT_TYPE == "Java" || PROJECT_TYPE == "自动检测") ? 
+${(PROJECT_TYPE == "Java" || PROJECT_TYPE == "自动检测") ?
 "#### Java 架构模式（如检测到）
+
 - 应用容器和启动过程
 - 依赖注入框架使用（Spring、CDI 等）
 - AOP 实现模式
@@ -151,8 +162,9 @@ ${(PROJECT_TYPE == "Java" || PROJECT_TYPE == "自动检测") ?
 - ORM 配置和使用模式
 - 服务实现模式" : ""}
 
-${(PROJECT_TYPE == "React" || PROJECT_TYPE == "自动检测") ? 
+${(PROJECT_TYPE == "React" || PROJECT_TYPE == "自动检测") ?
 "#### React 架构模式（如检测到）
+
 - 组件组合和重用策略
 - 状态管理架构
 - 副作用处理模式
@@ -160,8 +172,9 @@ ${(PROJECT_TYPE == "React" || PROJECT_TYPE == "自动检测") ?
 - 数据获取和缓存模式
 - 渲染优化策略" : ""}
 
-${(PROJECT_TYPE == "Angular" || PROJECT_TYPE == "自动检测") ? 
+${(PROJECT_TYPE == "Angular" || PROJECT_TYPE == "自动检测") ?
 "#### Angular 架构模式（如检测到）
+
 - 模块组织策略
 - 组件层级设计
 - 服务和依赖注入模式
@@ -169,8 +182,9 @@ ${(PROJECT_TYPE == "Angular" || PROJECT_TYPE == "自动检测") ?
 - 反应式编程模式
 - 路由守卫实现" : ""}
 
-${(PROJECT_TYPE == "Python" || PROJECT_TYPE == "自动检测") ? 
+${(PROJECT_TYPE == "Python" || PROJECT_TYPE == "自动检测") ?
 "#### Python 架构模式（如检测到）
+
 - 模块组织方法
 - 依赖管理策略
 - 面向对象 vs. 函数式实现模式
@@ -178,7 +192,8 @@ ${(PROJECT_TYPE == "Python" || PROJECT_TYPE == "自动检测") ?
 - 异步编程方法" : ""}
 
 ### 10. 实现模式
-${INCLUDES_IMPLEMENTATION_PATTERNS ? 
+
+${INCLUDES_IMPLEMENTATION_PATTERNS ?
 "记录关键架构组件的具体实现模式：
 
 - **接口设计模式**：
@@ -212,6 +227,7 @@ ${INCLUDES_IMPLEMENTATION_PATTERNS ?
   - 业务规则强制执行" : "提及详细实现模式在代码库中有所不同。"}
 
 ### 11. 测试架构
+
 - 记录与架构对齐的测试策略
 - 识别测试边界模式（单元、集成、系统）
 - 映射测试替身和模拟方法
@@ -219,6 +235,7 @@ ${INCLUDES_IMPLEMENTATION_PATTERNS ?
 - 注明测试工具和框架集成
 
 ### 12. 部署架构
+
 - 记录从配置推导出的部署拓扑
 - 识别环境特定的架构调整
 - 映射运行时依赖解析模式
@@ -227,7 +244,8 @@ ${INCLUDES_IMPLEMENTATION_PATTERNS ?
 - 注明云服务集成模式
 
 ### 13. 扩展与演进模式
-${FOCUS_ON_EXTENSIBILITY ? 
+
+${FOCUS_ON_EXTENSIBILITY ?
 "提供扩展架构的详细指导：
 
 - **功能添加模式**：
@@ -248,7 +266,7 @@ ${FOCUS_ON_EXTENSIBILITY ?
   - 反腐层模式
   - 服务门面实现" : "记录架构中的关键扩展点。"}
 
-${INCLUDES_CODE_EXAMPLES ? 
+${INCLUDES_CODE_EXAMPLES ?
 "### 14. 架构模式示例
 提取能说明关键架构模式的代表性代码示例：
 
@@ -269,7 +287,7 @@ ${INCLUDES_CODE_EXAMPLES ?
 
 每个示例需包含足够的上下文以清晰展示模式，但保持示例简洁，聚焦于架构概念。" : ""}
 
-${INCLUDES_DECISION_RECORDS ? 
+${INCLUDES_DECISION_RECORDS ?
 "### 15. 架构决策记录
 记录代码库中显而易见的关键架构决策：
 
@@ -289,18 +307,21 @@ ${INCLUDES_DECISION_RECORDS ?
   - 性能 vs. 可维护性的权衡
 
 对每个决策，需注明：
+
 - 促使决策的上下文
 - 决策时考虑的因素
 - 导致的结果（正面和负面）
 - 引入的未来灵活性或限制" : ""}
 
 ### ${INCLUDES_DECISION_RECORDS ? "16" : INCLUDES_CODE_EXAMPLES ? "15" : "14"}. 架构治理
+
 - 记录如何维护架构一致性
 - 识别用于架构合规性的自动化检查
 - 注明代码库中显而易见的架构评审流程
 - 记录架构文档实践
 
 ### ${INCLUDES_DECISION_RECORDS ? "17" : INCLUDES_CODE_EXAMPLES ? "16" : "15"}. 新开发蓝图
+
 创建一个清晰的架构指南用于实施新功能：
 
 - **开发流程**：

@@ -36,14 +36,60 @@ jobs:
       - name: Check for markdown file changes
         id: check-changes
         run: |
-          # 比较当前 commit 和上一个 commit 之间的差异
-          if git diff HEAD~1 HEAD --name-only 2>/dev/null | grep -E '^[^/]+\.md$'; then
+          # 获取所有非zh-CN.md结尾的md文件
+          echo "Scanning all markdown files and comparing commits..."
+
+          # 获取当前commit和上一个commit之间的差异（所有目录）
+          CHANGED_FILES=$(git diff HEAD~1 HEAD --name-only 2>/dev/null | grep '\.md$' | grep -v '\.zh-CN\.md$' || echo "")
+
+          # 获取所有目录的非zh-CN.md md文件
+          ALL_MD_FILES=$(find . -name '*.md' -type f | sed 's|^./||' | grep -v '\.zh-CN\.md$' | sort)
+
+          FILES_TO_CHECK=""
+
+          if [ -n "$CHANGED_FILES" ]; then
+            # 对于变化的文件，都需要翻译
+            FILES_TO_CHECK="$(echo "$CHANGED_FILES" | sort | uniq)"
+            echo "Found changed markdown files:"
+            echo "$FILES_TO_CHECK"
+          fi
+
+          # 检查所有md文件，看是否需要翻译（当对应的.zh-CN.md不存在或过期时）
+          echo ""
+          echo "Checking for missing or outdated translations..."
+
+          for file in $ALL_MD_FILES; do
+            zh_file="${file%.*}.zh-CN.md"
+
+            if [ ! -f "$zh_file" ]; then
+              # zh-CN.md文件不存在
+              if ! echo "$FILES_TO_CHECK" | grep -q "^$file$"; then
+                echo "Missing translation: $file"
+                FILES_TO_CHECK="$FILES_TO_CHECK $file"
+              fi
+            else
+              # 检查修改时间，如果原文件比翻译文件更新
+              if [ "$file" -nt "$zh_file" ]; then
+                if ! echo "$FILES_TO_CHECK" | grep -q "^$file$"; then
+                  echo "Outdated translation: $file (source newer than $zh_file)"
+                  FILES_TO_CHECK="$FILES_TO_CHECK $file"
+                fi
+              fi
+            fi
+          done
+
+          # 整理结果
+          FILES_TO_CHECK=$(echo "$FILES_TO_CHECK" | tr ' ' '\n' | sort | uniq | tr '\n' ' ' | xargs)
+
+          if [ -n "$FILES_TO_CHECK" ]; then
             echo "has-changes=true" >> $GITHUB_OUTPUT
-            echo "Changed files:"
-            git diff HEAD~1 HEAD --name-only | grep -E '^[^/]+\.md$' | tee changed_files.txt
+            echo "$FILES_TO_CHECK" | tr ' ' '\n' > changed_files.txt
+            echo ""
+            echo "Final list of files to translate:"
+            cat changed_files.txt
           else
             echo "has-changes=false" >> $GITHUB_OUTPUT
-            echo "No markdown files changed in root directory"
+            echo "No markdown files need translation"
           fi
         continue-on-error: true
 
@@ -70,10 +116,10 @@ jobs:
             echo "No files to translate"
             exit 0
           fi
-          
+
           echo "Starting translation..."
           python scripts/translate.py ${{ steps.get-files.outputs.files }}
-          
+
           if [ $? -eq 0 ]; then
             echo "Translation completed successfully"
           else
@@ -93,7 +139,7 @@ jobs:
               TRANSLATED_FILES="$TRANSLATED_FILES $translated_file"
             fi
           done
-          
+
           if [ -z "$TRANSLATED_FILES" ]; then
             echo "No translated files generated"
             echo "has-translated=false" >> $GITHUB_OUTPUT
@@ -134,6 +180,8 @@ jobs:
             documentation
             translation
             automated
+          token: ${{ secrets.GITHUB_TOKEN }}
+          push-to-fork: false
 
       - name: Report status
         if: always()
