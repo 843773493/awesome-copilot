@@ -1,2 +1,4 @@
-skills/azure-resource-visualizer/SKILL.md
-skills/azure-resource-visualizer/assets/template-architecture.md
+agents/CSharpExpert.agent.md
+agents/devils-advocate.agent.md
+docs/README.agents.md
+instructions/agents.instructions.md
