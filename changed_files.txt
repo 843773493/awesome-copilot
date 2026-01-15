@@ -1,4 +1,5 @@
-agents/CSharpExpert.agent.md
-agents/devils-advocate.agent.md
-docs/README.agents.md
-instructions/agents.instructions.md
+collections/awesome-copilot.md
+docs/README.instructions.md
+docs/README.prompts.md
+instructions/html-css-style-color-guide.instructions.md
+prompts/suggest-awesome-github-copilot-agents.prompt.md
