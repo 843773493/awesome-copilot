@@ -1,5 +1,6 @@
 collections/awesome-copilot.md
-docs/README.instructions.md
 docs/README.prompts.md
-instructions/html-css-style-color-guide.instructions.md
-prompts/suggest-awesome-github-copilot-agents.prompt.md
+instructions/svelte.instructions.md
+prompts/suggest-awesome-github-copilot-collections.prompt.md
+prompts/suggest-awesome-github-copilot-instructions.prompt.md
+prompts/suggest-awesome-github-copilot-prompts.prompt.md
