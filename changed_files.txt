@@ -1,6 +1,1 @@
-collections/awesome-copilot.md
-docs/README.prompts.md
-instructions/svelte.instructions.md
-prompts/suggest-awesome-github-copilot-collections.prompt.md
-prompts/suggest-awesome-github-copilot-instructions.prompt.md
-prompts/suggest-awesome-github-copilot-prompts.prompt.md
+docs/README.skills.md
