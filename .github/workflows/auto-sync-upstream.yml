@@ -48,6 +48,12 @@ jobs:
         run: |
           git merge upstream/main -m "chore: auto-sync from upstream" || echo "merge-status=conflict" >> $GITHUB_ENV
 
+      - name: Abort merge on conflict
+        if: steps.check.outputs.already-synced == 'false' && env.merge-status == 'conflict'
+        run: |
+          git merge --abort
+          git reset --hard HEAD
+
       - name: Push to main
         if: steps.check.outputs.already-synced == 'false' && env.merge-status != 'conflict'
         run: git push origin main
