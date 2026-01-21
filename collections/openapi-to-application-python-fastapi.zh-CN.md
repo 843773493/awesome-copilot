@@ -1,0 +1,13 @@
+# OpenAPI 到应用程序 - Python FastAPI
+
+根据 OpenAPI 规范生成生产就绪的 FastAPI 应用程序。包括项目脚手架、路由生成、依赖注入，以及异步 API 的 Python 最佳实践。
+
+**标签:** openapi, code-generation, api, python, fastapi
+
+## 本集合中的项目
+
+| 标题 | 类型 | 描述 | MCP 服务器 |
+| ---- | ---- | ---- | ---- |
+| [OpenAPI 到应用程序生成器](../agents/openapi-to-application.agent.md)<br />[![在 VS Code 中安装](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fopenapi-to-application.agent.md)<br />[![在 VS Code Insiders 中安装](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/agent?url=vscode-insiders%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fopenapi-to-application.agent.md) | Agent | 用于根据 OpenAPI 规范生成可运行应用程序的专家助手 |  |
+| [Python 编码规范](../instructions/python.instructions.md)<br />[![在 VS Code 中安装](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Fpython.instructions.md)<br />[![在 VS Code Insiders 中安装](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode-insiders%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Fpython.instructions.md) | 指令 | Python 编码规范和指南 |  |
+| [根据 OpenAPI 规范生成应用程序](../prompts/openapi-to-application-code.prompt.md)<br />[![在 VS Code 中安装](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fopenapi-to-application-code.prompt.md)<br />[![在 VS Code Insiders 中安装](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode-insiders%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fopenapi-to-application-code.prompt.md) | 提示 | 根据 OpenAPI 规范生成完整且可投入生产的应用程序 |  |
