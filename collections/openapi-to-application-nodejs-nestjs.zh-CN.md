@@ -1,0 +1,13 @@
+# 从OpenAPI生成应用程序 - Node.js NestJS
+
+从OpenAPI规范生成可直接投入生产的NestJS应用程序。包含项目脚手架搭建、控制器和服务生成、TypeScript最佳实践以及企业级设计模式。
+
+**标签:** openapi, code-generation, api, nodejs, typescript, nestjs
+
+## 本集合中的项目
+
+| 标题 | 类型 | 描述 | MCP服务器 |
+| ---- | ---- | ---- | ---- |
+| [从OpenAPI生成应用程序生成器](../agents/openapi-to-application.agent.md)<br />[![在VS Code中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fopenapi-to-application.agent.md)<br />[![在VS Code Insiders中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/agent?url=vscode-insiders%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fopenapi-to-application.agent.md) | 代理 | 专家助手，用于根据OpenAPI规范生成可运行的应用程序 |  |
+| [NestJS开发最佳实践](../instructions/nestjs.instructions.md)<br />[![在VS Code中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Fnestjs.instructions.md)<br />[![在VS Code Insiders中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/instructions?url=vscode-insiders%3Achat-instructions%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Finstructions%2Fnestjs.instructions.md) | 指南 | 用于构建可扩展的Node.js服务端应用程序的NestJS开发标准和最佳实践 |  |
+| [从OpenAPI规范生成应用程序](../prompts/openapi-to-application-code.prompt.md)<br />[![在VS Code中安装](https://img.shields.io/badge/VS_Code-安装-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fopenapi-to-application-code.prompt.md)<br />[![在VS Code Insiders中安装](https://img.shields.io/badge/VS_Code_Insiders-安装-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/install/prompt?url=vscode-insiders%3Achat-prompt%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fprompts%2Fopenapi-to-application-code.prompt.md) | 提示 | 根据OpenAPI规范生成一个完整且可直接投入生产的应用程序 |  |
