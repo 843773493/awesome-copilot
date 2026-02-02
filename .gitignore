@@ -6,6 +6,7 @@ reports/
 # macOS system files
 .DS_Store
 *.tmp
+.env
 
 # Website build artifacts
 website/dist/
