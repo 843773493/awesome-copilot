@@ -43,16 +43,30 @@ jobs:
             echo "Local: $LOCAL"
           fi
 
-      - name: Merge upstream (no conflict)
+      - name: Merge upstream (accept upstream on conflicts)
         if: steps.check.outputs.already-synced == 'false'
         run: |
-          git merge upstream/main -m "chore: auto-sync from upstream" || echo "merge-status=conflict" >> $GITHUB_ENV
+          git merge -s recursive -X theirs upstream/main -m "chore: auto-sync from upstream" || echo "merge-status=conflict" >> $GITHUB_ENV
 
-      - name: Abort merge on conflict
+      - name: Auto-resolve conflicts in favor of upstream
         if: steps.check.outputs.already-synced == 'false' && env.merge-status == 'conflict'
         run: |
-          git merge --abort
-          git reset --hard HEAD
+          # Accept upstream ("theirs") for all conflicted files and commit the result
+          git ls-files -u | awk '{print $4}' | sort -u | while read file; do
+            if [ -n "$file" ]; then
+              git checkout --theirs -- "$file"
+              git add "$file"
+              echo "Resolved $file in favor of upstream"
+            fi
+          done
+          REMAINING=$(git diff --name-only --diff-filter=U || true)
+          if [ -n "$REMAINING" ]; then
+            echo "merge-status=conflict" >> $GITHUB_ENV
+            echo "Remaining conflicts: $REMAINING"
+          else
+            git commit -m "chore: auto-resolve conflicts in favor of upstream" || true
+            echo "merge-status=resolved" >> $GITHUB_ENV
+          fi
 
       - name: Push to main
         if: steps.check.outputs.already-synced == 'false' && env.merge-status != 'conflict'
