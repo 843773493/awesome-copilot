@@ -8,7 +8,11 @@ reports/
 *.tmp
 .env
 
+# Generated files
+/llms.txt
+
 # Website build artifacts
 website/dist/
 website/.astro/
 website/public/data/*
+website/public/llms.txt
