@@ -1,2 +1,8 @@
-README.md
-instructions/code-review-generic.instructions.md
+agents/insiders-a11y-tracker.agent.md
+collections/security-best-practices.md
+docs/README.agents.md
+docs/README.instructions.md
+docs/README.skills.md
+instructions/a11y.instructions.md
+skills/gh-cli/SKILL.md
+skills/microsoft-docs/SKILL.md
