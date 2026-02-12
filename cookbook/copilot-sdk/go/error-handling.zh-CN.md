@@ -10,7 +10,7 @@
 
 ## 示例场景
 
-您需要处理各种错误条件，例如连接失败、超时和无效响应。
+您需要处理各种错误情况，例如连接失败、超时和无效响应。
 
 ## 基础错误处理
 
@@ -18,44 +18,38 @@
 package main
 
 import (
+    "context"
     "fmt"
     "log"
-    "github.com/github/copilot-sdk/go"
+    copilot "github.com/github/copilot-sdk/go"
 )
 
 func main() {
-    client := copilot.NewClient()
+    ctx := context.Background()
+    client := copilot.NewClient(nil)
 
-    if err := client.Start(); err != nil {
-        log.Fatalf("无法启动客户端: %v", err)
+    if err := client.Start(ctx); err != nil {
+        log.Fatalf("启动客户端失败: %v", err)
     }
-    defer func() {
-        if err := client.Stop(); err != nil {
-            log.Printf("停止客户端时出错: %v", err)
-        }
-    }()
+    defer client.Stop()
 
-    session, err := client.CreateSession(copilot.SessionConfig{
+    session, err := client.CreateSession(ctx, &copilot.SessionConfig{
         Model: "gpt-5",
     })
     if err != nil {
-        log.Fatalf("无法创建会话: %v", err)
+        log.Fatalf("创建会话失败: %v", err)
     }
     defer session.Destroy()
 
-    responseChan := make(chan string, 1)
-    session.On(func(event copilot.Event) {
-        if msg, ok := event.(copilot.AssistantMessageEvent); ok {
-            responseChan <- msg.Data.Content
-        }
-    })
-
-    if err := session.Send(copilot.MessageOptions{Prompt: "Hello!"}); err != nil {
-        log.Printf("无法发送消息: %v", err)
+    result, err := session.SendAndWait(ctx, copilot.MessageOptions{Prompt: "Hello!"})
+    if err != nil {
+        log.Printf("发送消息失败: %v", err)
+        return
     }
 
-    response := <-responseChan
-    fmt.Println(response)
+    if result != nil && result.Data.Content != nil {
+        fmt.Println(*result.Data.Content)
+    }
 }
 ```
 
@@ -63,14 +57,17 @@ func main() {
 
 ```go
 import (
+    "context"
     "errors"
+    "fmt"
     "os/exec"
+    copilot "github.com/github/copilot-sdk/go"
 )
 
-func startClient() error {
-    client := copilot.NewClient()
+func startClient(ctx context.Context) error {
+    client := copilot.NewClient(nil)
 
-    if err := client.Start(); err != nil {
+    if err := client.Start(ctx); err != nil {
         var execErr *exec.Error
         if errors.As(err, &execErr) {
             return fmt.Errorf("未找到 Copilot CLI。请先安装它: %w", err)
@@ -90,48 +87,41 @@ func startClient() error {
 ```go
 import (
     "context"
+    "errors"
+    "fmt"
     "time"
+    copilot "github.com/github/copilot-sdk/go"
 )
 
 func sendWithTimeout(session *copilot.Session) error {
     ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
     defer cancel()
 
-    responseChan := make(chan string, 1)
-    errChan := make(chan error, 1)
-
-    session.On(func(event copilot.Event) {
-        if msg, ok := event.(copilot.AssistantMessageEvent); ok {
-            responseChan <- msg.Data.Content
+    result, err := session.SendAndWait(ctx, copilot.MessageOptions{Prompt: "复杂问题..."})
+    if err != nil {
+        if errors.Is(err, context.DeadlineExceeded) {
+            return fmt.Errorf("请求超时")
         }
-    })
-
-    if err := session.Send(copilot.MessageOptions{Prompt: "复杂问题..."}); err != nil {
         return err
     }
 
-    select {
-    case response := <-responseChan:
-        fmt.Println(response)
-        return nil
-    case err := <-errChan:
-        return err
-    case <-ctx.Done():
-        return fmt.Errorf("请求超时")
+    if result != nil && result.Data.Content != nil {
+        fmt.Println(*result.Data.Content)
     }
+    return nil
 }
 ```
 
 ## 中止请求
 
 ```go
-func abortAfterDelay(session *copilot.Session) {
-    // 启动一个请求
-    session.Send(copilot.MessageOptions{Prompt: "写一个很长的故事..."})
+func abortAfterDelay(ctx context.Context, session *copilot.Session) {
+    // 启动请求（非阻塞发送）
+    session.Send(ctx, copilot.MessageOptions{Prompt: "写一个很长的故事..."})
 
     // 在某些条件后中止请求
     time.AfterFunc(5*time.Second, func() {
-        if err := session.Abort(); err != nil {
+        if err := session.Abort(ctx); err != nil {
             log.Printf("中止失败: %v", err)
         }
         fmt.Println("请求已中止")
@@ -143,13 +133,18 @@ func abortAfterDelay(session *copilot.Session) {
 
 ```go
 import (
+    "context"
+    "fmt"
+    "log"
     "os"
     "os/signal"
     "syscall"
+    copilot "github.com/github/copilot-sdk/go"
 )
 
 func main() {
-    client := copilot.NewClient()
+    ctx := context.Background()
+    client := copilot.NewClient(nil)
 
     // 设置信号处理
     sigChan := make(chan os.Signal, 1)
@@ -158,15 +153,11 @@ func main() {
     go func() {
         <-sigChan
         fmt.Println("\n正在关闭...")
-
-        if err := client.Stop(); err != nil {
-            log.Printf("清理错误: %v", err)
-        }
-
+        client.Stop()
         os.Exit(0)
     }()
 
-    if err := client.Start(); err != nil {
+    if err := client.Start(ctx); err != nil {
         log.Fatal(err)
     }
 
@@ -178,14 +169,15 @@ func main() {
 
 ```go
 func doWork() error {
-    client := copilot.NewClient()
+    ctx := context.Background()
+    client := copilot.NewClient(nil)
 
-    if err := client.Start(); err != nil {
+    if err := client.Start(ctx); err != nil {
         return fmt.Errorf("启动失败: %w", err)
     }
     defer client.Stop()
 
-    session, err := client.CreateSession(copilot.SessionConfig{Model: "gpt-5"})
+    session, err := client.CreateSession(ctx, &copilot.SessionConfig{Model: "gpt-5"})
     if err != nil {
         return fmt.Errorf("创建会话失败: %w", err)
     }
@@ -199,8 +191,8 @@ func doWork() error {
 
 ## 最佳实践
 
-1. **始终进行清理**：使用 `defer` 确保调用 `Stop()`  
-2. **处理连接错误**：CLI 可能未安装或未运行  
-3. **设置适当的超时**：对长时间运行的请求使用 `context.WithTimeout`  
-4. **记录错误**：捕获错误细节以供调试  
-5. **包装错误**：使用 `fmt.Errorf` 并配合 `%w` 以保留错误链信息
+1. **始终进行清理**：使用 `defer` 确保调用 `Stop()`
+2. **处理连接错误**：CLI 可能未安装或未运行
+3. **设置适当的超时**：对长时间运行的请求使用 `context.WithTimeout`
+4. **记录错误**：捕获错误详情以供调试
+5. **包装错误**：使用 `fmt.Errorf` 并配合 `%w` 以保留错误链

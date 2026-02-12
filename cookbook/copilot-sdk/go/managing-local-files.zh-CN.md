@@ -10,7 +10,7 @@
 
 ## 示例场景
 
-你有一个包含大量文件的文件夹，想要根据元数据（如文件类型、创建日期、文件大小或其他属性）将它们整理到子文件夹中。Copilot 可以分析这些文件，并建议或执行分组策略。
+你有一个包含大量文件的文件夹，希望根据元数据（如文件类型、创建日期、文件大小或其他属性）将它们整理到子文件夹中。Copilot 可以分析这些文件，并建议或执行分组策略。
 
 ## 示例代码
 
@@ -18,23 +18,26 @@
 package main
 
 import (
+    "context"
     "fmt"
     "log"
     "os"
     "path/filepath"
-    "github.com/github/copilot-sdk/go"
+    copilot "github.com/github/copilot-sdk/go"
 )
 
 func main() {
+    ctx := context.Background()
+
     // 创建并启动客户端
-    client := copilot.NewClient()
-    if err := client.Start(); err != nil {
+    client := copilot.NewClient(nil)
+    if err := client.Start(ctx); err != nil {
         log.Fatal(err)
     }
     defer client.Stop()
 
     // 创建会话
-    session, err := client.CreateSession(copilot.SessionConfig{
+    session, err := client.CreateSession(ctx, &copilot.SessionConfig{
         Model: "gpt-5",
     })
     if err != nil {
@@ -43,14 +46,20 @@ func main() {
     defer session.Destroy()
 
     // 事件处理程序
-    session.On(func(event copilot.Event) {
-        switch e := event.(type) {
-        case copilot.AssistantMessageEvent:
-            fmt.Printf("\nCopilot: %s\n", e.Data.Content)
-        case copilot.ToolExecutionStartEvent:
-            fmt.Printf("  → 正在运行: %s\n", e.Data.ToolName)
-        case copilot.ToolExecutionCompleteEvent:
-            fmt.Printf("  ✓ 完成: %s\n", e.Data.ToolName)
+    session.On(func(event copilot.SessionEvent) {
+        switch event.Type {
+        case "assistant.message":
+            if event.Data.Content != nil {
+                fmt.Printf("\nCopilot: %s\n", *event.Data.Content)
+            }
+        case "tool.execution_start":
+            if event.Data.ToolName != nil {
+                fmt.Printf("  → 正在运行: %s\n", *event.Data.ToolName)
+            }
+        case "tool.execution_complete":
+            if event.Data.ToolName != nil {
+                fmt.Printf("  ✓ 完成: %s\n", *event.Data.ToolName)
+            }
         }
     })
 
@@ -63,17 +72,16 @@ func main() {
 
 1. 首先列出所有文件及其元数据
 2. 预览按文件扩展名分组的结果
-3. 创建适当的子文件夹（例如：images、documents、videos）
-4. 将每个文件移动到对应的子文件夹
+3. 创建适当的子文件夹（例如："images"、"documents"、"videos"）
+4. 将每个文件移动到对应的子文件夹中
 
 请在移动任何文件前进行确认。
 `, targetFolder)
 
-    if err := session.Send(copilot.MessageOptions{Prompt: prompt}); err != nil {
+    _, err = session.SendAndWait(ctx, copilot.MessageOptions{Prompt: prompt})
+    if err != nil {
         log.Fatal(err)
     }
-
-    session.WaitForIdle()
 }
 ```
 
@@ -82,7 +90,7 @@ func main() {
 ### 按文件扩展名
 
 ```go
-// 按以下方式分组文件：
+// 分组示例：
 // images/   -> .jpg, .png, .gif
 // documents/ -> .pdf, .docx, .txt
 // videos/   -> .mp4, .avi, .mov
@@ -91,7 +99,7 @@ func main() {
 ### 按创建日期
 
 ```go
-// 按以下方式分组文件：
+// 分组示例：
 // 2024-01/ -> 2024年1月创建的文件
 // 2024-02/ -> 2024年2月创建的文件
 ```
@@ -99,7 +107,7 @@ func main() {
 ### 按文件大小
 
 ```go
-// 按以下方式分组文件：
+// 分组示例：
 // tiny-under-1kb/
 // small-under-1mb/
 // medium-under-100mb/
@@ -112,11 +120,11 @@ func main() {
 
 ```go
 prompt := fmt.Sprintf(`
-分析 "%s" 中的文件并展示你如何按文件类型进行整理。
-不要移动任何文件，只需向我展示整理计划。
+分析 "%s" 中的文件，并展示你如何按文件类型进行整理的计划。
+DO NOT 移动任何文件 - 仅展示整理方案。
 `, targetFolder)
 
-session.Send(copilot.MessageOptions{Prompt: prompt})
+session.SendAndWait(ctx, copilot.MessageOptions{Prompt: prompt})
 ```
 
 ## 基于 AI 分析的自定义分组
@@ -134,11 +142,11 @@ prompt := fmt.Sprintf(`
 提出具有描述性和实用性的文件夹名称。
 `, targetFolder)
 
-session.Send(copilot.MessageOptions{Prompt: prompt})
+session.SendAndWait(ctx, copilot.MessageOptions{Prompt: prompt})
 ```
 
 ## 安全注意事项
 
-1. **移动前确认**：在执行文件移动操作前，请要求 Copilot 进行确认
-2. **处理重复文件**：考虑若存在同名文件时会如何处理
-3. **保留原始文件**：对于重要文件，考虑复制而非移动操作
+1. **移动前确认**：在执行移动操作前，请要求 Copilot 进行确认
+2. **处理重复文件**：考虑如果存在同名文件会如何处理
+3. **保留原始文件**：对于重要文件，考虑复制而非移动的操作
