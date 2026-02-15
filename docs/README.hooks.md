@@ -27,5 +27,5 @@ Hooks enable automated workflows triggered by specific events during GitHub Copi
 
 | Name | Description | Events | Bundled Assets |
 | ---- | ----------- | ------ | -------------- |
-| [Session Auto-Commit](../hooks/session-auto-commit/README.md) | Automatically commits and pushes changes when a Copilot coding agent session ends | sessionEnd | `auto-commit.sh`<br />`hooks.json` |
-| [Session Logger](../hooks/session-logger/README.md) | Logs all Copilot coding agent session activity for audit and analysis | sessionStart, sessionEnd, userPromptSubmitted | `hooks.json`<br />`log-prompt.sh`<br />`log-session-end.sh`<br />`log-session-start.sh` |
+| [Session Auto-Commit](../hooks/session-auto-commit/README.md) | Automatically commits and pushes changes when a Copilot coding agent session ends | sessionEnd | `README.zh-CN.md`<br />`auto-commit.sh`<br />`hooks.json` |
+| [Session Logger](../hooks/session-logger/README.md) | Logs all Copilot coding agent session activity for audit and analysis | sessionStart, sessionEnd, userPromptSubmitted | `README.zh-CN.md`<br />`hooks.json`<br />`log-prompt.sh`<br />`log-session-end.sh`<br />`log-session-start.sh` |
