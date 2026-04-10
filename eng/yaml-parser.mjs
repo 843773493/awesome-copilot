@@ -1,4 +1,4 @@
-// YAML parser for collection files and frontmatter parsing using vfile-matter
+// YAML parser for frontmatter parsing using vfile-matter
 import fs from "fs";
 import yaml from "js-yaml";
 import path from "path";
@@ -12,25 +12,6 @@ function safeFileOperation(operation, filePath, defaultValue = null) {
     console.error(`Error processing file ${filePath}: ${error.message}`);
     return defaultValue;
   }
-}
-
-/**
- * Parse a collection YAML file (.collection.yml)
- * Collections are pure YAML files without frontmatter delimiters
- * @param {string} filePath - Path to the collection file
- * @returns {object|null} Parsed collection object or null on error
- */
-function parseCollectionYaml(filePath) {
-  return safeFileOperation(
-    () => {
-      const content = fs.readFileSync(filePath, "utf8");
-
-      // Collections are pure YAML files, parse directly with js-yaml
-      return yaml.load(content, { schema: yaml.JSON_SCHEMA });
-    },
-    filePath,
-    null
-  );
 }
 
 /**
@@ -164,10 +145,11 @@ function parseSkillMetadata(skillPath) {
       // List bundled assets (all files except SKILL.md), recursing through subdirectories
       const getAllFiles = (dirPath, arrayOfFiles = []) => {
         const files = fs.readdirSync(dirPath);
+        const assetPaths = ['references', 'assets', 'scripts'];
 
         files.forEach((file) => {
           const filePath = path.join(dirPath, file);
-          if (fs.statSync(filePath).isDirectory()) {
+          if (fs.statSync(filePath).isDirectory() && assetPaths.includes(file)) {
             arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
           } else {
             const relativePath = path.relative(skillPath, filePath);
@@ -273,6 +255,49 @@ function parseHookMetadata(hookPath) {
 }
 
 /**
+ * Parse workflow metadata from a standalone .md workflow file
+ * @param {string} filePath - Path to the workflow .md file
+ * @returns {object|null} Workflow metadata or null on error
+ */
+function parseWorkflowMetadata(filePath) {
+  return safeFileOperation(
+    () => {
+      if (!fs.existsSync(filePath)) {
+        return null;
+      }
+
+      const frontmatter = parseFrontmatter(filePath);
+
+      // Validate required fields
+      if (!frontmatter?.name || !frontmatter?.description) {
+        console.warn(
+          `Invalid workflow at ${filePath}: missing name or description in frontmatter`
+        );
+        return null;
+      }
+
+      // Extract triggers from the 'on' field (top-level keys)
+      const onField = frontmatter.on;
+      const triggers = [];
+      if (onField && typeof onField === "object") {
+        triggers.push(...Object.keys(onField));
+      } else if (typeof onField === "string") {
+        triggers.push(onField);
+      }
+
+      return {
+        name: frontmatter.name,
+        description: frontmatter.description,
+        triggers,
+        path: filePath,
+      };
+    },
+    filePath,
+    null
+  );
+}
+
+/**
  * Parse a generic YAML file (used for tools.yml and other config files)
  * @param {string} filePath - Path to the YAML file
  * @returns {object|null} Parsed YAML object or null on error
@@ -292,10 +317,10 @@ export {
   extractAgentMetadata,
   extractMcpServerConfigs,
   extractMcpServers,
-  parseCollectionYaml,
   parseFrontmatter,
   parseSkillMetadata,
   parseHookMetadata,
+  parseWorkflowMetadata,
   parseYamlFile,
   safeFileOperation,
 };
