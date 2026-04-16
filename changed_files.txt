@@ -23,6 +23,7 @@ agents/gem-designer.agent.md
 agents/gem-implementer-mobile.agent.md
 agents/gem-mobile-tester.agent.md
 agents/github-actions-node-upgrade.agent.md
+agents/linkedin-post-writer.agent.md
 agents/markdown-accessibility-assistant.agent.md
 agents/mentoring-juniors.agent.md
 agents/nuxt-expert.agent.md
@@ -62,13 +63,6 @@ agents/taxcore-technical-writer.agent.md
 agents/terratest-module-testing.agent.md
 agents/vuejs-expert.agent.md
 agents/winui3-expert.agent.md
-cookbook/copilot-sdk/go/accessibility-report.md
-cookbook/copilot-sdk/go/error-handling.md
-cookbook/copilot-sdk/go/managing-local-files.md
-cookbook/copilot-sdk/go/multiple-sessions.md
-cookbook/copilot-sdk/go/persisting-sessions.md
-cookbook/copilot-sdk/go/pr-visualization.md
-cookbook/copilot-sdk/go/ralph-loop.md
 cookbook/copilot-sdk/java/README.md
 cookbook/copilot-sdk/java/accessibility-report.md
 cookbook/copilot-sdk/java/error-handling.md
@@ -78,12 +72,15 @@ cookbook/copilot-sdk/java/persisting-sessions.md
 cookbook/copilot-sdk/java/pr-visualization.md
 cookbook/copilot-sdk/java/ralph-loop.md
 cookbook/copilot-sdk/java/recipe/README.md
+docs/README.agents.md
 docs/README.plugins.md
+docs/README.skills.md
 docs/README.workflows.md
 hooks/dependency-license-checker/README.md
 hooks/governance-audit/README.md
 hooks/secrets-scanner/README.md
 hooks/tool-guardian/README.md
+instructions/a11y.instructions.md
 instructions/agent-safety.instructions.md
 instructions/aws-appsync.instructions.md
 instructions/azure-durable-functions-csharp.instructions.md
@@ -622,7 +619,6 @@ skills/context-map/SKILL.md
 skills/conventional-commit/SKILL.md
 skills/convert-plaintext-to-md/SKILL.md
 skills/copilot-instructions-blueprint-generator/SKILL.md
-skills/copilot-sdk/SKILL.md
 skills/copilot-spaces/SKILL.md
 skills/copilot-usage-metrics/SKILL.md
 skills/cosmosdb-datamodeling/SKILL.md
@@ -794,6 +790,8 @@ skills/java-springboot/SKILL.md
 skills/javascript-typescript-jest/SKILL.md
 skills/kotlin-mcp-server-generator/SKILL.md
 skills/kotlin-springboot/SKILL.md
+skills/linkedin-post-formatter/SKILL.md
+skills/linkedin-post-formatter/references/unicode-charmap.md
 skills/lsp-setup/SKILL.md
 skills/lsp-setup/references/lsp-servers.md
 skills/mcp-copilot-studio-server-generator/SKILL.md
