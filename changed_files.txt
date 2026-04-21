@@ -381,6 +381,8 @@ plugins/power-bi-development/skills/power-bi-dax-optimization/SKILL.md
 plugins/power-bi-development/skills/power-bi-model-design-review/SKILL.md
 plugins/power-bi-development/skills/power-bi-performance-troubleshooting/SKILL.md
 plugins/power-bi-development/skills/power-bi-report-design-consultation/SKILL.md
+plugins/power-platform-architect/README.md
+plugins/power-platform-architect/skills/power-platform-architect/SKILL.md
 plugins/power-platform-mcp-connector-development/agents/power-platform-mcp-integration-expert.md
 plugins/power-platform-mcp-connector-development/skills/mcp-copilot-studio-server-generator/SKILL.md
 plugins/power-platform-mcp-connector-development/skills/power-platform-mcp-connector-suite/SKILL.md
@@ -687,6 +689,7 @@ skills/eval-driven-dev/references/6-investigate.md
 skills/eval-driven-dev/references/evaluators.md
 skills/eval-driven-dev/references/testing-api.md
 skills/eval-driven-dev/references/wrap-api.md
+skills/exam-ready/SKILL.md
 skills/fabric-lakehouse/SKILL.md
 skills/fabric-lakehouse/references/getdata.md
 skills/fabric-lakehouse/references/pyspark.md
